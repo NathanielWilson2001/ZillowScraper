@@ -43,6 +43,7 @@ func main() {
 
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 
+	request.Header.Set("User-Agent", "User")
 	request.Header.Set("Accept", "*/")
 	request.Header.Set("Accept-Encoding", "gzip")
 	request.Header.Set("Accept-Language", "en-US,en;q=0.9")
@@ -74,5 +75,7 @@ func main() {
 		panic(err)
 	}
 	// Do something with the response body
+	jsonBody, _ := json.Marshal(body)
+	_ = jsonBody
 	fmt.Println(string(body))
 }
