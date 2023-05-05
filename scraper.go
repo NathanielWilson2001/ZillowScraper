@@ -2,35 +2,50 @@ package main
 
 import (
 	"compress/gzip"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
-	"strings"
 	"time"
-
-	"golang.org/x/net/html"
 )
 
-type Houses struct {
-	seller  string
-	price   int
-	address string
-	details string
-}
-
-func newHouse(name string, price int, address string, details string) Houses {
-
-	house := Houses{seller: name}
-	house.price = price
-	house.address = address
-	house.details = details
-	return house
-
+type Response struct {
+	User struct {
+		IsLoggedIn                    bool   `json:"isLoggedin"`
+		Email                         string `json:"email"`
+		DisplayName                   string `json:"displayName"`
+		HasHousingConnectorPermission bool   `json:"hasHousingConnectorPermission"`
+		SavedHomesCount               int    `json:"savedHomesCount"`
+		PersonalizedSearchTraceID     string `json:"personalizedSearchTraceID"`
+		Guid                          string `json:"guid"`
+		Zuid                          string `json:"zuid"`
+		IsBot                         bool   `json:"isBot"`
+		UserSpecializedSEORegion      bool   `json:"userSpecializedSEORegion"`
+	} `json:"user"`
+	RequestId int `json:"requestId"`
+	Cat1      struct {
+		SearchResults struct {
+			ListResults []struct {
+				Zpid              string     `json:"zpid"`
+				Id                string     `json:"id"`
+				ProviderListingId string     `json:"providerListingId"`
+				ImgSrc            string     `json:"imgSrc"`
+				HasImage          bool       `json:"hasImage"`
+				CarouselPhotos    []struct{} `json:"carouselPhotos"`
+				HdpData           struct {
+					HomeInfo struct {
+						Zpid string `json:"zpid"`
+					} `json:"homeInfo"`
+				} `json:"hdpData"`
+			} `json:"listResults"`
+		} `json:"searchResults"`
+	} `json:"cat1"`
 }
 
 func main() {
 
-	url := "https://www.zillow.com/homes/Boston,-MA_rb/"
+	url := "https://www.zillow.com/search/GetSearchPageState.htm?searchQueryState=%7B%22mapBounds%22%3A%7B%22north%22%3A43.1847127353123%2C%22south%22%3A41.512239125025815%2C%22east%22%3A-70.65074389648439%2C%22west%22%3A-71.68071215820314%7D%2C%22mapZoom%22%3A9%2C%22isMapVisible%22%3Afalse%2C%22filterState%22%3A%7B%22isAllHomes%22%3A%7B%22value%22%3Atrue%7D%2C%22sortSelection%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%7D%2C%22isListVisible%22%3Atrue%7D&wants={%22cat1%22:[%22listResults%22],%22cat2%22:[%22total%22],%22regionResults%22:[%22regionResults%22]}&requestId=2"
 	client := http.Client{Timeout: time.Second * 5}
 
 	request, err := http.NewRequest(http.MethodGet, url, nil)
@@ -62,19 +77,20 @@ func main() {
 	}
 	defer reader.Close()
 
-	htmlString := html.NewTokenizer(reader)
-	for {
-		tt := htmlString.Next()
-		if tt == html.ErrorToken {
-			// ...
-			fmt.Print("error")
-			break
-		}
-		tagAttr := htmlString.Token().Attr
-		if len(tagAttr) > 0 {
-			if strings.Contains(tagAttr[0].Val, "cWiizR") {
-				fmt.Println(tagAttr[0])
-			}
-		}
+	body, err := io.ReadAll(reader)
+
+	jsonResponse, err := json.Marshal(string(body))
+	_ = jsonResponse
+	responseStructure := &Response{}
+	json.Unmarshal(body, &responseStructure)
+	fmt.Println(responseStructure)
+	if err != nil {
+		panic(err)
 	}
+
+	/*htmlString := html.NewTokenizer(reader)
+	htmlString.Next()
+	json.
+	fmt.Println(htmlString.Token()) */
+
 }
