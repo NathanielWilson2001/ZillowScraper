@@ -2,12 +2,12 @@ package main
 
 import (
 	"compress/gzip"
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"time"
+
+	"golang.org/x/net/html"
 )
 
 type Houses struct {
@@ -29,15 +29,6 @@ func newHouse(name string, price int, address string, details string) Houses {
 
 func main() {
 
-	searchQueryState := "{'pagination':{},'usersSearchTerm':'Boston, MA','mapBounds':{'west':-71.30031054687501,'east':-70.79493945312501,'south':42.111529685321216,'north':42.514687824439775},'regionSelection':[{'regionId':44269,'regionType':6}],'isMapVisible':true,'filterState':{'sortSelection':{'value':'globalrelevanceex'},'isForSaleByAgent':{'value':false},'isForSaleByOwner':{'value':false},'isNewConstruction':{'value':false},'isForSaleForeclosure':{'value':false},'isComingSoon':{'value':false},'isAuction':{'value':false},'isRecentlySold':{'value':true},'isAllHomes':{'value':true}},'isListVisible':true,'mapZoom':11}"
-	wants := "{'cat1':['mapResults']}"
-	var stringSearch string = ""
-	var stringWants string = ""
-	errStringSearch := json.Unmarshal([]byte(searchQueryState), &stringSearch)
-	errStringWants := json.Unmarshal([]byte(wants), &stringWants)
-	if errStringSearch != nil && errStringWants != nil {
-		fmt.Println("error: ", errStringSearch)
-	}
 	url := "https://www.zillow.com/homes/Boston,-MA_rb/"
 	client := http.Client{Timeout: time.Second * 5}
 
@@ -69,13 +60,16 @@ func main() {
 		panic(err)
 	}
 	defer reader.Close()
-	// Read the decompressed response body
-	body, err := io.ReadAll(reader)
-	if err != nil {
-		panic(err)
+
+	htmlString := html.NewTokenizer(reader)
+	for {
+		tt := htmlString.Next()
+		if tt == html.ErrorToken {
+			// ...
+			fmt.Print("error")
+			break
+		}
+		// Process the current token.
+		fmt.Println(htmlString.Token())
 	}
-	// Do something with the response body
-	jsonBody, _ := json.Marshal(body)
-	_ = jsonBody
-	fmt.Println(string(body))
 }
