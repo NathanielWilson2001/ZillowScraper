@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"golang.org/x/net/html"
@@ -69,7 +70,11 @@ func main() {
 			fmt.Print("error")
 			break
 		}
-		// Process the current token.
-		fmt.Println(htmlString.Token())
+		tagAttr := htmlString.Token().Attr
+		if len(tagAttr) > 0 {
+			if strings.Contains(tagAttr[0].Val, "cWiizR") {
+				fmt.Println(tagAttr[0])
+			}
+		}
 	}
 }
