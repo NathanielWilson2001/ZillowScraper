@@ -11,31 +11,26 @@ import (
 )
 
 type Response struct {
-	User struct {
-		IsLoggedIn                    bool   `json:"isLoggedin"`
-		Email                         string `json:"email"`
-		DisplayName                   string `json:"displayName"`
-		HasHousingConnectorPermission bool   `json:"hasHousingConnectorPermission"`
-		SavedHomesCount               int    `json:"savedHomesCount"`
-		PersonalizedSearchTraceID     string `json:"personalizedSearchTraceID"`
-		Guid                          string `json:"guid"`
-		Zuid                          string `json:"zuid"`
-		IsBot                         bool   `json:"isBot"`
-		UserSpecializedSEORegion      bool   `json:"userSpecializedSEORegion"`
-	} `json:"user"`
 	RequestId int `json:"requestId"`
 	Cat1      struct {
 		SearchResults struct {
 			ListResults []struct {
-				Zpid              string     `json:"zpid"`
-				Id                string     `json:"id"`
-				ProviderListingId string     `json:"providerListingId"`
-				ImgSrc            string     `json:"imgSrc"`
-				HasImage          bool       `json:"hasImage"`
-				CarouselPhotos    []struct{} `json:"carouselPhotos"`
-				HdpData           struct {
+				Zpid    string `json:"zpid"`
+				Id      string `json:"id"`
+				HdpData struct {
 					HomeInfo struct {
-						Zpid string `json:"zpid"`
+						StreetAddress string  `json:"streetAddress"`
+						Zipcode       string  `json:"zipcode"`
+						City          string  `json:"city"`
+						State         string  `json:"state"`
+						Price         float64 `json:"price"`
+						Bathrooms     float64 `json:"bathrooms"`
+						Bedrooms      float64 `json:"bedrooms"`
+						LivingArea    float64 `json:"livingArea"`
+						HomeType      string  `json:"homeType"`
+						HomeStatus    string  `json:"homeStatus"`
+						Zestimate     int     `json:"zestimate"`
+						RentZestimate int     `json:"rentZestimate"`
 					} `json:"homeInfo"`
 				} `json:"hdpData"`
 			} `json:"listResults"`
@@ -87,10 +82,4 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	/*htmlString := html.NewTokenizer(reader)
-	htmlString.Next()
-	json.
-	fmt.Println(htmlString.Token()) */
-
 }
