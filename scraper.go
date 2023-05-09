@@ -80,7 +80,7 @@ func calculate(responseStructure Response) {
 	averageZRentEstimate = float64(averageZRentEstimate / float64(len(responseStructure.Cat1.SearchResults.ListResults)))
 	averageZestimate = float64(averageZestimate / float64(len(responseStructure.Cat1.SearchResults.ListResults)))
 
-	fmt.Printf("Count: %d \nAverage Price = %.2f \nAverage Square Foot = %.2f\nAverage Price per Square Foot = %.2f\nAverage Zestimate = %.2f\nAverage ZRentEstimate = %.2f\nHousing Type Breakdown:\n\tMultifamily: %d\n\tSingle Family: %d\n\tCondo: %d", len(responseStructure.Cat1.SearchResults.ListResults),
+	fmt.Printf("Count: %d \nAverage Price = %.2f \nAverage Square Foot = %.2f\nAverage Price per Square Foot = %.2f\nAverage Zestimate = %.2f\nAverage ZRentEstimate = %.2f\nHousing Type Breakdown:\n\tMultifamily: %d\n\tSingle Family: %d\n\tCondo: %d\n", len(responseStructure.Cat1.SearchResults.ListResults),
 		averagePriceSum,
 		averageSquareFootSum,
 		averagePriceSum/averageSquareFootSum,
@@ -89,13 +89,10 @@ func calculate(responseStructure Response) {
 		housingType[0],
 		housingType[1],
 		housingType[2])
+
 }
-
-func main() {
-
+func makeRequest(north float64, south float64, east float64, west float64) {
 	url := "https://www.zillow.com/search/GetSearchPageState.htm?"
-	fmt.Println()
-	fmt.Println(url)
 	client := http.Client{Timeout: time.Second * 5}
 
 	request, err := http.NewRequest(http.MethodGet, url, nil)
@@ -129,10 +126,10 @@ func main() {
 
 	params := &urlParamters{}
 
-	params.MapBounds.North = 42.28936961396935
-	params.MapBounds.South = 41.86942883946931
-	params.MapBounds.East = -70.90983246728517
-	params.MapBounds.West = -71.16732453271486
+	params.MapBounds.North = north
+	params.MapBounds.South = south
+	params.MapBounds.East = east
+	params.MapBounds.West = west
 	params.MapZoom = 9
 	params.IsMapVisible = false
 	params.FilterState.IsAllHomes.Value = true
@@ -191,4 +188,10 @@ func main() {
 	}
 
 	calculate(*responseStructure)
+}
+func main() {
+
+	makeRequest(42.28936961396935, 41.86942883946931, -70.90983246728517, -71.16732453271486)
+	makeRequest(43.1847127353123, 41.512239125025815, -70.65074389648439, -71.68071215820314)
+
 }
