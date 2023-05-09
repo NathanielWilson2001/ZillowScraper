@@ -93,10 +93,65 @@ func calculate(responseStructure Response) {
 
 func main() {
 
-	url := "https://www.zillow.com/search/GetSearchPageState.htm?searchQueryState=%7B%22mapBounds%22%3A%7B%22north%22%3A42.28936961396935%2C%22east%22%3A-70.90983246728517%2C%22south%22%3A41.86942883946931%2C%22west%22%3A-71.16732453271486%7D%2C%22isMapVisible%22%3Atrue%2C%22filterState%22%3A%7B%22isAllHomes%22%3A%7B%22value%22%3Atrue%7D%2C%22sortSelection%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%2C%22isRecentlySold%22%3A%7B%22value%22%3Atrue%7D%2C%22isForSaleByAgent%22%3A%7B%22value%22%3Afalse%7D%2C%22isForSaleByOwner%22%3A%7B%22value%22%3Afalse%7D%2C%22isNewConstruction%22%3A%7B%22value%22%3Afalse%7D%2C%22isComingSoon%22%3A%7B%22value%22%3Afalse%7D%2C%22isAuction%22%3A%7B%22value%22%3Afalse%7D%2C%22isForSaleForeclosure%22%3A%7B%22value%22%3Afalse%7D%7D%2C%22isListVisible%22%3Atrue%2C%22regionSelection%22%3A%5B%7B%22regionId%22%3A58710%2C%22regionType%22%3A7%7D%5D%2C%22mapZoom%22%3A11%2C%22pagination%22%3A%7B%7D%7D&wants=%7B%22cat1%22:[%22listResults%22,%22mapResults%22]%7D&requestId=3"
+	url := "https://www.zillow.com/search/GetSearchPageState.htm?"
+	fmt.Println()
+	fmt.Println(url)
 	client := http.Client{Timeout: time.Second * 5}
 
 	request, err := http.NewRequest(http.MethodGet, url, nil)
+	query := request.URL.Query()
+
+	type urlParamters struct {
+		MapBounds struct {
+			North float64 `json:"north"`
+			South float64 `json:"south"`
+			East  float64 `json:"east"`
+			West  float64 `json:"west"`
+		} `json:"mapBounds"`
+		MapZoom      int  `json:"mapZoom"`
+		IsMapVisible bool `json:"isMapVisible"`
+		FilterState  struct {
+			IsAllHomes struct {
+				Value bool `json:"value"`
+			} `json:"isAllHomes"`
+			SortSelection struct {
+				Value string `json:"value"`
+			} `json:"sortSelection"`
+		} `json:"filterState"`
+		IsListVisible bool `json:"isListVisible"`
+	}
+
+	type urlWants struct {
+		Cat1          [1]string `json:"cat1"`
+		Cat2          [1]string `json:"cat2"`
+		RegionResults [1]string `json:"regionResults"`
+	}
+
+	params := &urlParamters{}
+
+	params.MapBounds.North = 42.28936961396935
+	params.MapBounds.South = 41.86942883946931
+	params.MapBounds.East = -70.90983246728517
+	params.MapBounds.West = -71.16732453271486
+	params.MapZoom = 9
+	params.IsMapVisible = false
+	params.FilterState.IsAllHomes.Value = true
+	params.FilterState.SortSelection.Value = "globalrelevanceex"
+	params.IsListVisible = true
+	wants := &urlWants{}
+	wants.Cat1[0] = "listResults"
+	wants.Cat2[0] = "total"
+	wants.RegionResults[0] = "regionResults"
+
+	b, _ := json.Marshal(params)
+	query.Add("searchQueryState", string(b))
+
+	b, _ = json.Marshal(wants)
+	query.Add("wants", string(b))
+
+	request.URL.RawQuery = query.Encode()
+
+	fmt.Println(request.URL.String())
 
 	request.Header.Set("User-Agent", "User")
 	request.Header.Set("Accept", "*/")
@@ -129,8 +184,8 @@ func main() {
 
 	responseStructure := &Response{}
 	json.Unmarshal(body, &responseStructure)
-	//fmt.Println(responseStructure)
-	responseToString(*responseStructure)
+
+	//responseToString(*responseStructure)
 	if err != nil {
 		panic(err)
 	}
