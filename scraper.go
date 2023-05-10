@@ -39,6 +39,10 @@ type Response struct {
 	} `json:"cat1"`
 }
 
+/*
+*	The purpose of responseToString(responseStructure Response) is to take in a JSON struct response from the request
+*	And output the results to console in a more clear, easy to read JSON repsonse
+ */
 func responseToString(responseStructure Response) {
 
 	b, err := json.MarshalIndent(responseStructure, "", "\t")
@@ -49,36 +53,48 @@ func responseToString(responseStructure Response) {
 	return
 }
 
+/*
+*	The purpose of calculate(responseStructure Response) is to take in a JSON struct response from the request
+*	and calculate the information from the data set by looping through all entries:
+*	Gets the Average Price, Average Sq Footage, Average Zestimate, Average Rent Zestimate
+*	Outputs them to the console as a String
+ */
 func calculate(responseStructure Response) {
 
+	// Initilize Base values to 0
 	averagePriceSum := 0.0
 	averageSquareFootSum := 0.0
 	averageZestimate := 0.0
 	averageZRentEstimate := 0.0
 	var housingType [3]int
 
-	for i := 0; i < len(responseStructure.Cat1.SearchResults.ListResults); i++ {
+	numOfEntries := len(responseStructure.Cat1.SearchResults.ListResults)
+	// Loop through all entries in result
+	for i := 0; i < numOfEntries; i++ {
 
-		averagePriceSum += float64(responseStructure.Cat1.SearchResults.ListResults[i].HdpData.HomeInfo.Price)
-		averageSquareFootSum += float64(responseStructure.Cat1.SearchResults.ListResults[i].HdpData.HomeInfo.LivingArea)
-		averageZRentEstimate += float64(responseStructure.Cat1.SearchResults.ListResults[i].HdpData.HomeInfo.RentZestimate)
-		averageZestimate += float64(responseStructure.Cat1.SearchResults.ListResults[i].HdpData.HomeInfo.Zestimate)
+		currentEntry := responseStructure.Cat1.SearchResults.ListResults[i].HdpData.HomeInfo
 
-		if strings.Contains(responseStructure.Cat1.SearchResults.ListResults[i].HdpData.HomeInfo.HomeType, "MULTI") {
+		averagePriceSum += float64(currentEntry.Price)
+		averageSquareFootSum += float64(currentEntry.LivingArea)
+		averageZRentEstimate += float64(currentEntry.RentZestimate)
+		averageZestimate += float64(currentEntry.Zestimate)
+
+		if strings.Contains(currentEntry.HomeType, "MULTI") {
 			housingType[0]++
 		}
-		if strings.Contains(responseStructure.Cat1.SearchResults.ListResults[i].HdpData.HomeInfo.HomeType, "SINGLE") {
+		if strings.Contains(currentEntry.HomeType, "SINGLE") {
 			housingType[1]++
 		}
-		if strings.Contains(responseStructure.Cat1.SearchResults.ListResults[i].HdpData.HomeInfo.HomeType, "CONDO") {
+		if strings.Contains(currentEntry.HomeType, "CONDO") {
 			housingType[2]++
 		}
 
 	}
-	averagePriceSum = float64(averagePriceSum / float64(len(responseStructure.Cat1.SearchResults.ListResults)))
-	averageSquareFootSum = float64(averageSquareFootSum / float64(len(responseStructure.Cat1.SearchResults.ListResults)))
-	averageZRentEstimate = float64(averageZRentEstimate / float64(len(responseStructure.Cat1.SearchResults.ListResults)))
-	averageZestimate = float64(averageZestimate / float64(len(responseStructure.Cat1.SearchResults.ListResults)))
+	// Calculate the average
+	averagePriceSum = float64(averagePriceSum / float64(numOfEntries))
+	averageSquareFootSum = float64(averageSquareFootSum / float64(numOfEntries))
+	averageZRentEstimate = float64(averageZRentEstimate / float64(numOfEntries))
+	averageZestimate = float64(averageZestimate / float64(numOfEntries))
 
 	fmt.Printf("Count: %d \nAverage Price = %.2f \nAverage Square Foot = %.2f\nAverage Price per Square Foot = %.2f\nAverage Zestimate = %.2f\nAverage ZRentEstimate = %.2f\nHousing Type Breakdown:\n\tMultifamily: %d\n\tSingle Family: %d\n\tCondo: %d\n", len(responseStructure.Cat1.SearchResults.ListResults),
 		averagePriceSum,
@@ -91,13 +107,20 @@ func calculate(responseStructure Response) {
 		housingType[2])
 
 }
-func makeRequest(north float64, south float64, east float64, west float64) {
+
+/*
+*	The purpose of makeRequest is to take in 4 GPS coordinate values that are used to set a boundary for a given search location,
+*	as well as the Page number, and generate a request URL to Zillow. The request is then sent and the response is stored
+*	in the response object. Response calculate is called to output the calculations from the given data set.
+ */
+func makeRequest(north float64, south float64, east float64, west float64, numPages int) {
 	url := "https://www.zillow.com/search/GetSearchPageState.htm?"
 	client := http.Client{Timeout: time.Second * 5}
 
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	query := request.URL.Query()
 
+	// URL parameter struct created to form the 'searchQueryState' data necessary for the request.
 	type urlParamters struct {
 		MapBounds struct {
 			North float64 `json:"north"`
@@ -116,8 +139,12 @@ func makeRequest(north float64, south float64, east float64, west float64) {
 			} `json:"sortSelection"`
 		} `json:"filterState"`
 		IsListVisible bool `json:"isListVisible"`
+		Pagination    struct {
+			CurrentPage int `json:"currentPage"`
+		} `json:"pagination"`
 	}
 
+	// URL 'wants' parameter that attaches to the end of the request link.
 	type urlWants struct {
 		Cat1          [1]string `json:"cat1"`
 		Cat2          [1]string `json:"cat2"`
@@ -126,6 +153,7 @@ func makeRequest(north float64, south float64, east float64, west float64) {
 
 	params := &urlParamters{}
 
+	// Set values for URL Parameters
 	params.MapBounds.North = north
 	params.MapBounds.South = south
 	params.MapBounds.East = east
@@ -135,11 +163,15 @@ func makeRequest(north float64, south float64, east float64, west float64) {
 	params.FilterState.IsAllHomes.Value = true
 	params.FilterState.SortSelection.Value = "globalrelevanceex"
 	params.IsListVisible = true
+	params.Pagination.CurrentPage = numPages
+
+	// Set want values
 	wants := &urlWants{}
 	wants.Cat1[0] = "listResults"
 	wants.Cat2[0] = "total"
 	wants.RegionResults[0] = "regionResults"
 
+	// Attach structs to the query and encode
 	b, _ := json.Marshal(params)
 	query.Add("searchQueryState", string(b))
 
@@ -148,8 +180,7 @@ func makeRequest(north float64, south float64, east float64, west float64) {
 
 	request.URL.RawQuery = query.Encode()
 
-	fmt.Println(request.URL.String())
-
+	// Set default header values and encoding type
 	request.Header.Set("User-Agent", "User")
 	request.Header.Set("Accept", "*/")
 	request.Header.Set("Accept-Encoding", "gzip")
@@ -166,6 +197,7 @@ func makeRequest(north float64, south float64, east float64, west float64) {
 		log.Fatal(err)
 	}
 
+	// Perform request and decode response
 	response, resErr := client.Do(request)
 	if resErr != nil {
 		log.Fatal(err)
@@ -177,8 +209,8 @@ func makeRequest(north float64, south float64, east float64, west float64) {
 	}
 	defer reader.Close()
 
+	// Store response into a Response struct
 	body, err := io.ReadAll(reader)
-
 	responseStructure := &Response{}
 	json.Unmarshal(body, &responseStructure)
 
@@ -191,7 +223,10 @@ func makeRequest(north float64, south float64, east float64, west float64) {
 }
 func main() {
 
-	makeRequest(42.28936961396935, 41.86942883946931, -70.90983246728517, -71.16732453271486)
-	makeRequest(43.1847127353123, 41.512239125025815, -70.65074389648439, -71.68071215820314)
+	makeRequest(42.28936961396935, 41.86942883946931, -70.90983246728517, -71.16732453271486, 1)
+	makeRequest(42.28936961396935, 41.86942883946931, -70.90983246728517, -71.16732453271486, 2)
+	makeRequest(42.28936961396935, 41.86942883946931, -70.90983246728517, -71.16732453271486, 3)
+
+	//makeRequest(43.1847127353123, 41.512239125025815, -70.65074389648439, -71.68071215820314, 1)
 
 }
