@@ -4,11 +4,19 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"image/color"
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
+
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
 )
 
 type Response struct {
@@ -235,9 +243,52 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 	calculate(responses, numPages)
 
 }
+
+/*
+*	The purpose of displayApp() is to display the GUI interface for the application
+*
+*
+ */
+func displayApp() {
+
+	app := app.New()
+	w := app.NewWindow("Zillow Scraper")
+
+	rectangle := canvas.NewRectangle(color.White)
+	w.SetContent(rectangle)
+
+	label1 := widget.NewLabel("First Data Entry")
+	value1 := widget.NewLabel("Value")
+	_, _ = label1, value1
+
+	inputNorth := widget.NewEntry()
+	inputNorth.SetPlaceHolder("Enter North Coordinate...")
+	inputSouth := widget.NewEntry()
+	inputSouth.SetPlaceHolder("Enter South Coordinate...")
+	inputEast := widget.NewEntry()
+	inputEast.SetPlaceHolder("Enter East Coordinate...")
+	inputWest := widget.NewEntry()
+	inputWest.SetPlaceHolder("Enter West Coordinate...")
+	inputPages := widget.NewEntry()
+	inputPages.SetPlaceHolder("Enter number of pages")
+	grid := container.NewVBox(inputNorth, inputSouth, inputEast, inputWest, inputPages, widget.NewButton("Submit data", func() {
+		north, _ := strconv.ParseFloat(inputNorth.Text, 64)
+		south, _ := strconv.ParseFloat(inputSouth.Text, 64)
+		east, _ := strconv.ParseFloat(inputEast.Text, 64)
+		west, _ := strconv.ParseFloat(inputWest.Text, 64)
+		pageNum, _ := strconv.ParseInt(inputPages.Text, 10, 32)
+		makeRequest(north, south, east, west, int(pageNum))
+
+	}))
+	w.SetContent(grid)
+	w.Resize(fyne.NewSize(1080, 720))
+
+	w.ShowAndRun()
+}
 func main() {
 
-	makeRequest(42.28936961396935, 41.86942883946931, -70.90983246728517, -71.16732453271486, 10)
+	displayApp()
+	//makeRequest(42.28936961396935, 41.86942883946931, -70.90983246728517, -71.16732453271486, 10)
 
 	//makeRequest(43.1847127353123, 41.512239125025815, -70.65074389648439, -71.68071215820314, 1)
 
