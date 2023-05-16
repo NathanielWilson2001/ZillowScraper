@@ -67,7 +67,7 @@ func responseToString(responseStructure Response) {
 *	Gets the Average Price, Average Sq Footage, Average Zestimate, Average Rent Zestimate
 *	Outputs them to the console as a String
  */
-func calculate(responses []Response, numberOfPages int) {
+func calculate(responses []Response, numberOfPages int, output *widget.Label) {
 
 	// Initilize Base values to 0
 	averagePriceSum := 0.0
@@ -110,7 +110,7 @@ func calculate(responses []Response, numberOfPages int) {
 	averageZRentEstimate = float64(averageZRentEstimate / float64(runningTotalEntries))
 	averageZestimate = float64(averageZestimate / float64(runningTotalEntries))
 
-	fmt.Printf("Count: %d \nAverage Price = %.2f \nAverage Square Foot = %.2f\nAverage Price per Square Foot = %.2f\nAverage Zestimate = %.2f\nAverage ZRentEstimate = %.2f\nHousing Type Breakdown:\n\tMultifamily: %d\n\tSingle Family: %d\n\tCondo: %d\n",
+	outputString := fmt.Sprintf("Count: %d \nAverage Price = %.2f \nAverage Square Foot = %.2f\nAverage Price per Square Foot = %.2f\nAverage Zestimate = %.2f\nAverage ZRentEstimate = %.2f\nHousing Type Breakdown:\n\tMultifamily: %d\n\tSingle Family: %d\n\tCondo: %d\n",
 		runningTotalEntries,
 		averagePriceSum,
 		averageSquareFootSum,
@@ -121,6 +121,7 @@ func calculate(responses []Response, numberOfPages int) {
 		housingType[1],
 		housingType[2])
 
+	output.SetText(outputString)
 }
 
 /*
@@ -128,7 +129,7 @@ func calculate(responses []Response, numberOfPages int) {
 *	as well as the Page number, and generate a request URL to Zillow. The request is then sent and the response is stored
 *	in the response object. Response calculate is called to output the calculations from the given data set.
  */
-func makeRequest(north float64, south float64, east float64, west float64, numPages int) {
+func makeRequest(north float64, south float64, east float64, west float64, numPages int, output *widget.Label) {
 
 	var responses []Response
 	for pageNumber := 1; pageNumber <= numPages; pageNumber++ {
@@ -240,7 +241,7 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 		responses = append(responses, *responseStructure)
 	}
 
-	calculate(responses, numPages)
+	calculate(responses, numPages, output)
 
 }
 
@@ -257,9 +258,9 @@ func displayApp() {
 	rectangle := canvas.NewRectangle(color.White)
 	w.SetContent(rectangle)
 
-	label1 := widget.NewLabel("First Data Entry")
-	value1 := widget.NewLabel("Value")
-	_, _ = label1, value1
+	label1 := widget.NewLabel("Results will output here:")
+	label1.TextStyle.Bold = true
+	value1 := widget.NewLabel("")
 
 	inputNorth := widget.NewEntry()
 	inputNorth.SetPlaceHolder("Enter North Coordinate...")
@@ -277,10 +278,12 @@ func displayApp() {
 		east, _ := strconv.ParseFloat(inputEast.Text, 64)
 		west, _ := strconv.ParseFloat(inputWest.Text, 64)
 		pageNum, _ := strconv.ParseInt(inputPages.Text, 10, 32)
-		makeRequest(north, south, east, west, int(pageNum))
+		makeRequest(north, south, east, west, int(pageNum), value1)
 
-	}))
+	}), widget.NewCard("Reslts will output here", "", nil), value1)
+
 	w.SetContent(grid)
+	w.CenterOnScreen()
 	w.Resize(fyne.NewSize(1080, 720))
 
 	w.ShowAndRun()
