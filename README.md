@@ -13,7 +13,7 @@ Requirements:
 
 Current State:
 ![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/81f558ef-7342-4014-a006-666e640cbf41)
-![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/ebefa7a7-daf5-413c-8e09-d171bb8f2461)
-![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/a9d7e9f3-11e4-414a-ad52-a5669f7320c3)
+![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/8d1e4c45-3ada-478d-bb4f-2ce51ba94c8e)
+![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/53fc0532-e28a-4895-ad15-8ce1cc745063)
 
 -Currently there are only four locations, once I figure out the UI I would like to go with I will add more locations
