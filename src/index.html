@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <title>Zillow Scraper</title>
+</head>
+<body>
+  <div class="h-screen flex items-center justify-center bg-indigo-900">
+    <div class="relative bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10 mt-50">
+      <h1 class="text-3xl font-semibold">
+        Please Select a Location
+      </h1>
+      <br>
+      <form class="w-full max-w-lg" method="GET" action=""> 
+        <div class="grid grid-cols-2 gap-4">
+          <button class="bg-transparent hover:bg-indigo-500 text-indigo-500 font-semibold hover:text-white py-2 px-4 border border-indigo-500 hover:border-transparent rounded" id="Boston"  onclick="requestData('Boston')">
+            Boston
+          </button>
+          <button class="bg-transparent hover:bg-indigo-500 text-indigo-500 font-semibold hover:text-white py-2 px-4 border border-indigo-500 hover:border-transparent rounded" id="Brooklyn"  onclick="requestData('Brooklyn')">
+            Brooklyn
+          </button>
+          <button class="bg-transparent hover:bg-indigo-500 text-indigo-500 font-semibold hover:text-white py-2 px-4 border border-indigo-500 hover:border-transparent rounded" id="LosAngeles" onclick="requestData()">
+            Los Angeles
+          </button>
+          <button class="bg-transparent hover:bg-indigo-500 text-indigo-500 font-semibold hover:text-white py-2 px-4 border border-indigo-500 hover:border-transparent rounded" id="Dallas" onclick="requestData('Dallas')">
+            Dallas
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+   function requestData(locationName) {
+      selectedLocation = "boston";
+        // Send an HTTP GET request to the Go backend if needed
+        fetch("/hello").then(response => {
+          if (response.ok) {
+            // Redirect to the desired page once the Go function completes
+            window.location.href = '/city.html?location='+locationName;
+          } else {
+            console.error('Failed to redirect to cty.html');
+          }
+        })
+        .catch(error => {
+          console.error('Failed to fetch Go function:', error);
+        });
+
+        // Redirect to the appropriate location page
+        window.location.href = "/newpage";
+    };
+  </script>
+</body>
+</html>

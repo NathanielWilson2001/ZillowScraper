@@ -4,19 +4,12 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
-	"image/color"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
-
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 )
 
 type Response struct {
@@ -26,6 +19,7 @@ type Response struct {
 			ListResults []struct {
 				Zpid    string `json:"zpid"`
 				Id      string `json:"id"`
+				ImgSrc  string `json:"imgSrc"`
 				HdpData struct {
 					HomeInfo struct {
 						StreetAddress string  `json:"streetAddress"`
@@ -47,6 +41,20 @@ type Response struct {
 	} `json:"cat1"`
 }
 
+type Calculations struct {
+	RunningTotalEntries       int     `json:"runningTotalEntries"`
+	AveragePriceSum           float64 `json:"averagePriceSum"`
+	AverageSquareFootSum      float64 `json:"averageSquareFootSum"`
+	AveragePricePerSquareFoot float64 `json:"averagePricePerSquareFoot"`
+	AverageZestimate          float64 `json:"averageZestimate"`
+	AverageRentZestimate      float64 `json:"averageRentZestimate"`
+	MultiFamily               int     `json:"multiFamily"`
+	SingleFamily              int     `json:"singleFamily"`
+	Condo                     int     `json:"condo"`
+}
+
+var location = ""
+
 /*
 *	The purpose of responseToString(responseStructure Response) is to take in a JSON struct response from the request
 *	And output the results to console in a more clear, easy to read JSON repsonse
@@ -67,7 +75,7 @@ func responseToString(responseStructure Response) {
 *	Gets the Average Price, Average Sq Footage, Average Zestimate, Average Rent Zestimate
 *	Outputs them to the console as a String
  */
-func calculate(responses []Response, numberOfPages int, output *widget.Label) {
+func calculate(responses []Response, numberOfPages int) Calculations {
 
 	// Initilize Base values to 0
 	averagePriceSum := 0.0
@@ -110,18 +118,18 @@ func calculate(responses []Response, numberOfPages int, output *widget.Label) {
 	averageZRentEstimate = float64(averageZRentEstimate / float64(runningTotalEntries))
 	averageZestimate = float64(averageZestimate / float64(runningTotalEntries))
 
-	outputString := fmt.Sprintf("Count: %d \nAverage Price = %.2f \nAverage Square Foot = %.2f\nAverage Price per Square Foot = %.2f\nAverage Zestimate = %.2f\nAverage ZRentEstimate = %.2f\nHousing Type Breakdown:\n\tMultifamily: %d\n\tSingle Family: %d\n\tCondo: %d\n",
-		runningTotalEntries,
-		averagePriceSum,
-		averageSquareFootSum,
-		averagePriceSum/averageSquareFootSum,
-		averageZestimate,
-		averageZestimate,
-		housingType[0],
-		housingType[1],
-		housingType[2])
-
-	output.SetText(outputString)
+	calculations := Calculations{
+		RunningTotalEntries:       runningTotalEntries,
+		AveragePriceSum:           averagePriceSum,
+		AverageSquareFootSum:      averageSquareFootSum,
+		AveragePricePerSquareFoot: averagePriceSum / averageSquareFootSum,
+		AverageZestimate:          averageZestimate,
+		AverageRentZestimate:      averageZRentEstimate,
+		MultiFamily:               housingType[0],
+		SingleFamily:              housingType[1],
+		Condo:                     housingType[2],
+	}
+	return calculations
 }
 
 /*
@@ -129,7 +137,7 @@ func calculate(responses []Response, numberOfPages int, output *widget.Label) {
 *	as well as the Page number, and generate a request URL to Zillow. The request is then sent and the response is stored
 *	in the response object. Response calculate is called to output the calculations from the given data set.
  */
-func makeRequest(north float64, south float64, east float64, west float64, numPages int, output *widget.Label) {
+func makeRequest(north float64, south float64, east float64, west float64, numPages int) Calculations {
 
 	var responses []Response
 	for pageNumber := 1; pageNumber <= numPages; pageNumber++ {
@@ -241,58 +249,76 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 		responses = append(responses, *responseStructure)
 	}
 
-	calculate(responses, numPages, output)
+	return calculate(responses, numPages)
 
 }
 
-/*
-*	The purpose of displayApp() is to display the GUI interface for the application
-*
-*
- */
-func displayApp() {
+/* Send Fetch Data Request */
 
-	app := app.New()
-	w := app.NewWindow("Zillow Scraper")
-
-	rectangle := canvas.NewRectangle(color.White)
-	w.SetContent(rectangle)
-
-	label1 := widget.NewLabel("Results will output here:")
-	label1.TextStyle.Bold = true
-	value1 := widget.NewLabel("")
-
-	inputNorth := widget.NewEntry()
-	inputNorth.SetPlaceHolder("Enter North Coordinate...")
-	inputSouth := widget.NewEntry()
-	inputSouth.SetPlaceHolder("Enter South Coordinate...")
-	inputEast := widget.NewEntry()
-	inputEast.SetPlaceHolder("Enter East Coordinate...")
-	inputWest := widget.NewEntry()
-	inputWest.SetPlaceHolder("Enter West Coordinate...")
-	inputPages := widget.NewEntry()
-	inputPages.SetPlaceHolder("Enter number of pages")
-	grid := container.NewVBox(inputNorth, inputSouth, inputEast, inputWest, inputPages, widget.NewButton("Submit data", func() {
-		north, _ := strconv.ParseFloat(inputNorth.Text, 64)
-		south, _ := strconv.ParseFloat(inputSouth.Text, 64)
-		east, _ := strconv.ParseFloat(inputEast.Text, 64)
-		west, _ := strconv.ParseFloat(inputWest.Text, 64)
-		pageNum, _ := strconv.ParseInt(inputPages.Text, 10, 32)
-		makeRequest(north, south, east, west, int(pageNum), value1)
-
-	}), widget.NewCard("Reslts will output here", "", nil), value1)
-
-	w.SetContent(grid)
-	w.CenterOnScreen()
-	w.Resize(fyne.NewSize(1080, 720))
-
-	w.ShowAndRun()
+func fetchData(w http.ResponseWriter, r *http.Request) {
+	body, _ := ioutil.ReadAll(r.Body)
+	if string(body) == "Boston" {
+		jsonData, _ := json.Marshal(makeRequest(42.41414042483421, 42.212561301862415, -70.84678118896485, -71.24846881103517, 10))
+		w.Write(jsonData)
+	}
+	if string(body) == "Brooklyn" {
+		jsonData, _ := json.Marshal(makeRequest(40.758364183254, 40.551558686334644, -73.73687118896483, -74.13855881103514, 10))
+		w.Write(jsonData)
+	}
+	if string(body) == "LosAngeles" {
+		jsonData, _ := json.Marshal(makeRequest(34.4717411923813, 33.567993762094694, -117.60835725585937, -119.21510774414062, 10))
+		w.Write(jsonData)
+	}
+	if string(body) == "Dallas" {
+		jsonData, _ := json.Marshal(makeRequest(33.04672230257906, 32.588541447873666, -96.3757438779297, -97.17911912207032, 10))
+		w.Write(jsonData)
+	}
 }
+
 func main() {
+	fileServer := http.FileServer(http.Dir("src"))
+	http.Handle("/", http.StripPrefix("/", fileServer))
 
-	displayApp()
-	//makeRequest(42.28936961396935, 41.86942883946931, -70.90983246728517, -71.16732453271486, 10)
+	http.HandleFunc("/fetchData", fetchData)
+	http.HandleFunc("/hello", fetchData)
+	http.HandleFunc("/newpage", handleNewPage)
 
-	//makeRequest(43.1847127353123, 41.512239125025815, -70.65074389648439, -71.68071215820314, 1)
+	port := ":5505"
+	fmt.Printf("Go backend listening on %s...\n", port)
+	log.Fatal(http.ListenAndServe(port, nil))
+}
 
+func handleRequest(w http.ResponseWriter, r *http.Request) {
+	htmlBytes, err := ioutil.ReadFile("index.html")
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	_, err = w.Write(htmlBytes)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+}
+
+func handleHello(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/city.html", http.StatusFound)
+}
+
+func handleNewPage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("location", "Boston")
+	htmlBytes, err := ioutil.ReadFile("city.html")
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	_, err = w.Write(htmlBytes)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 }

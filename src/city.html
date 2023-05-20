@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <title>Tailwind Website</title>
+  <style id="BackgroundImage">
+  </style>
+</head>
+<body class="background-image">
+  <div class="flex justify-center items-center h-screen">
+    <div class="backdrop-blur-xl bg-white/30">
+      <div class="bg-white p-8 shadow-2xl">
+        <h1 class="text-4xl font-bold mb-4" id="Title"></h1>
+        <p class="text-gray-700" id="results"></p>
+      </div>
+  </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const locationName = urlParams.get('location');
+    var styleElement = document.getElementById("BackgroundImage");
+    styleElement.innerHTML = `
+        .background-image {
+          background-image: url(`+locationName+`.jpg);
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+          opacity: 0.7;
+        }
+     `;
+    var styleElement = document.getElementById("Title");
+    styleElement.innerHTML = `
+      Housing Data for `+locationName+`:
+     `;
+
+     fetch('/fetchData', {
+      method: 'POST',
+      body: locationName
+    })
+    .then(function(response) {
+      // Handle response from Go server
+      if (response.ok) {
+        return response.clone().json();
+      } else {
+        // Handle error response
+        console.error('Error:', response.status);
+      }
+    })
+    .then(data => {
+      // Accessing specific elements from the JSON response
+      console.log(data.runningTotalEntries); // Using dot notation
+    
+    })
+    .catch(function(error) {
+      // Handle network error
+      console.error('Error:', error);
+    });
+  </script>
+</body>
+</html>
