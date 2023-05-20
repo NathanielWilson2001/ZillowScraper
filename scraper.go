@@ -117,7 +117,6 @@ func calculate(responses []Response, numberOfPages int) Calculations {
 	averageSquareFootSum = float64(averageSquareFootSum / float64(runningTotalEntries))
 	averageZRentEstimate = float64(averageZRentEstimate / float64(runningTotalEntries))
 	averageZestimate = float64(averageZestimate / float64(runningTotalEntries))
-
 	calculations := Calculations{
 		RunningTotalEntries:       runningTotalEntries,
 		AveragePriceSum:           averagePriceSum,
@@ -141,7 +140,7 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 
 	var responses []Response
 	for pageNumber := 1; pageNumber <= numPages; pageNumber++ {
-		url := "https://www.zillow.com/search/GetSearchPageState.htm?"
+		url := "https://www.zillow.com/search/GetSearchPageState.htm?requestID=2?"
 		client := http.Client{Timeout: time.Second * 5}
 
 		request, err := http.NewRequest(http.MethodGet, url, nil)
@@ -229,7 +228,6 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 		if resErr != nil {
 			log.Fatal(err)
 		}
-
 		reader, err := gzip.NewReader(response.Body)
 		if err != nil {
 			panic(err)
@@ -241,7 +239,6 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 		responseStructure := &Response{}
 		json.Unmarshal(body, &responseStructure)
 
-		//responseToString(*responseStructure)
 		if err != nil {
 			panic(err)
 		}
