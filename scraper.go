@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -51,6 +52,21 @@ type Calculations struct {
 	MultiFamily               int     `json:"multiFamily"`
 	SingleFamily              int     `json:"singleFamily"`
 	Condo                     int     `json:"condo"`
+	Date                      string  `json:"timeOfCompletion"`
+}
+type Data struct {
+	Boston struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Boston"`
+	Brooklyn struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"brooklyn"`
+	LosAngeles struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"lostAngeles"`
+	Dallas struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"dallas"`
 }
 
 var location = ""
@@ -117,6 +133,8 @@ func calculate(responses []Response, numberOfPages int) Calculations {
 	averageSquareFootSum = float64(averageSquareFootSum / float64(runningTotalEntries))
 	averageZRentEstimate = float64(averageZRentEstimate / float64(runningTotalEntries))
 	averageZestimate = float64(averageZestimate / float64(runningTotalEntries))
+
+	currentTime := fmt.Sprint(time.Now().Format("2006-01-02"))
 	calculations := Calculations{
 		RunningTotalEntries:       runningTotalEntries,
 		AveragePriceSum:           averagePriceSum,
@@ -127,6 +145,7 @@ func calculate(responses []Response, numberOfPages int) Calculations {
 		MultiFamily:               housingType[0],
 		SingleFamily:              housingType[1],
 		Condo:                     housingType[2],
+		Date:                      currentTime,
 	}
 	return calculations
 }
@@ -254,22 +273,47 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 
 func fetchData(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
+	jsonFile, _ := os.Open("src/dataStorage.json")
+	jsonData, _ := ioutil.ReadAll(jsonFile)
+	dataStructure := &Data{}
+
+	json.Unmarshal(jsonData, &dataStructure)
+
 	if string(body) == "Boston" {
-		jsonData, _ := json.Marshal(makeRequest(42.41414042483421, 42.212561301862415, -70.84678118896485, -71.24846881103517, 10))
-		w.Write(jsonData)
+		calc := dataStructure.Boston.Calculations[len(dataStructure.Boston.Calculations)-1]
+		toSend, _ := json.Marshal(calc)
+		w.Write(toSend)
 	}
 	if string(body) == "Brooklyn" {
-		jsonData, _ := json.Marshal(makeRequest(40.758364183254, 40.551558686334644, -73.73687118896483, -74.13855881103514, 10))
-		w.Write(jsonData)
+		calc := dataStructure.Brooklyn.Calculations[len(dataStructure.Brooklyn.Calculations)-1]
+		toSend, _ := json.Marshal(calc)
+		w.Write(toSend)
 	}
 	if string(body) == "LosAngeles" {
-		jsonData, _ := json.Marshal(makeRequest(34.4717411923813, 33.567993762094694, -117.60835725585937, -119.21510774414062, 10))
-		w.Write(jsonData)
+		calc := dataStructure.LosAngeles.Calculations[len(dataStructure.LosAngeles.Calculations)-1]
+		toSend, _ := json.Marshal(calc)
+		w.Write(toSend)
 	}
 	if string(body) == "Dallas" {
-		jsonData, _ := json.Marshal(makeRequest(33.04672230257906, 32.588541447873666, -96.3757438779297, -97.17911912207032, 10))
-		w.Write(jsonData)
+		calc := dataStructure.Dallas.Calculations[len(dataStructure.Dallas.Calculations)-1]
+		toSend, _ := json.Marshal(calc)
+		w.Write(toSend)
 	}
+}
+
+func fill() {
+	jsonFile, _ := os.Open("src/dataStorage.json")
+	jsonData, _ := ioutil.ReadAll(jsonFile)
+	dataStructure := &Data{}
+	json.Unmarshal(jsonData, &dataStructure)
+	dataStructure.Boston.Calculations = append(dataStructure.Boston.Calculations, makeRequest(42.414140424834216, 42.21256130186242, -70.8934730834961, -71.20177691650392, 10))
+	dataStructure.Brooklyn.Calculations = append(dataStructure.Brooklyn.Calculations, makeRequest(40.758364183254, 40.551558686334644, -73.73687118896483, -74.13855881103514, 10))
+	dataStructure.LosAngeles.Calculations = append(dataStructure.LosAngeles.Calculations, makeRequest(34.4717411923813, 33.567993762094694, -117.60835725585937, -119.21510774414062, 10))
+	dataStructure.Dallas.Calculations = append(dataStructure.Dallas.Calculations, makeRequest(33.04672230257906, 32.588541447873666, -96.3757438779297, -97.17911912207032, 10))
+
+	updated, _ := json.Marshal((dataStructure))
+	_ = ioutil.WriteFile("src/dataStorage.json", updated, 0777)
+	fmt.Println("Fill Complete")
 }
 
 func main() {
