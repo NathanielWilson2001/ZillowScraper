@@ -9,17 +9,17 @@
   <style >
   </style>
 </head>
-<body class="bg-cyan-900">
+<body class="bg-cyan-950">
 
   <div class="flex justify-center items-center h-screen">
       <div class="flex font-sans shadow-2xl w-7/12 h-2/6">
         <div class="flex-none w-96 relative" id="image"></div>
         <form class="flex-auto p-6  bg-white" name="dataValues">
           <div class="flex flex-wrap">
-            <h1 class="flex-auto font-medium text-lg text-slate-900" id="Count">
+            <h1 class="flex-auto font-medium text-2xl text-slate-900" id="Count">
               400 Houses Anaylized
             </h1>
-            <div class="w-full flex-none mt-2 order-1 text-3xl font-bold text-cyan-600" id="Title">
+            <div class="w-full flex-none mt-2 order-1 text-5xl font-bold text-cyan-600" id="Title">
               Typical House in Boston:
             </div>
           </div>
@@ -27,33 +27,33 @@
             <div class="space-x-2 flex text-sm font-bold">
               <label>
                 <input class="sr-only peer" name="size" type="radio" onclick="changeOutput('averagePrice')" checked/>
-                <div class="w-12 h-12 rounded-full flex items-center justify-center text-cyan-400 peer-checked:bg-cyan-600 peer-checked:text-white">
-                  <span class="text-xl">&#36;</span>
+                <div class="w-14 h-14 rounded-full flex items-center justify-center text-cyan-400 peer-checked:bg-cyan-600 peer-checked:text-white">
+                  <span class="text-2xl">&#36;</span>
                 </div>
               </label>
               <label>
                 <input class="sr-only peer" name="size" type="radio" value="s"  onclick="changeOutput('averageSquareFootage')" />
-                <div class="w-12 h-12 rounded-full flex items-center justify-center text-cyan-400 peer-checked:bg-cyan-600 peer-checked:text-white">
-                  <span class="text-lg">ft<sup>2</sup></span>
+                <div class="w-14 h-14 rounded-full flex items-center justify-center text-cyan-400 peer-checked:bg-cyan-600 peer-checked:text-white">
+                  <span class="text-2xl">ft<sup>2</sup></span>
                 </div>
               </label>
               <label>
                 <input class="sr-only peer" name="size" type="radio"  onclick="changeOutput('Zillow')" />
-                <div class="w-12 h-12 rounded-full flex items-center justify-center text-cyan-400 peer-checked:bg-cyan-600 peer-checked:text-white">
-                  <span class="text-m">Zillow</span>
+                <div class="w-14 h-14 rounded-full flex items-center justify-center text-cyan-400 peer-checked:bg-cyan-600 peer-checked:text-white">
+                  <span class="text-lg font-bold">Zillow</span>
                 </div>
               </label>
               <label>
                 <input class="sr-only peer" name="size" type="radio"  />
-                <div class="w-12 h-12 rounded-full flex items-center justify-center text-cyan-400 peer-checked:bg-cyan-600 peer-checked:text-white">
-                  <i class="fa fa-home" style="font-size:32px"></i>
+                <div class="w-14 h-14 rounded-full flex items-center justify-center text-cyan-400 peer-checked:bg-cyan-600 peer-checked:text-white">
+                  <i class="fa fa-home" style="font-size:36px"></i>
                 </div>
               </label>
             </div>
           </div>
           <div class="flex space-x-4 mb-5 text-sm font-medium">
-            <div class="flex-auto flex space-x-4">
-              <p class="text-black text-lg" id="Data">
+            <div class="flex-auto flex space-x-4 mt-4">
+              <p class="text-black tracking-wide text-xl antialiased proportional-nums" id="Data">
               </p> 
             </div>
           </div>
