@@ -8,8 +8,8 @@ detail here in the future.
 The data is then outputed to a website houstided on localhost:5505 which can be accessed from the browser
 
 Current State:
-!![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/0a86e8b2-30b5-4d55-8160-ed31e464354a)
-!![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/a9049d00-01bc-4fc5-8923-dc2023232993)
+![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/0a86e8b2-30b5-4d55-8160-ed31e464354a)
+![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/a9049d00-01bc-4fc5-8923-dc2023232993)
 
 - Currently there are only four locations, once I figure out the UI I would like to go with I will add more locations
 - The UI is created with the use of HTML, JavaScript and Tailwind CSS for styling. 
