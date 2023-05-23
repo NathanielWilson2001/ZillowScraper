@@ -60,16 +60,50 @@ type Data struct {
 	} `json:"Boston"`
 	Brooklyn struct {
 		Calculations []Calculations `json:"data"`
-	} `json:"brooklyn"`
+	} `json:"Brooklyn"`
 	LosAngeles struct {
 		Calculations []Calculations `json:"data"`
-	} `json:"lostAngeles"`
+	} `json:"LosAngeles"`
 	Dallas struct {
 		Calculations []Calculations `json:"data"`
-	} `json:"dallas"`
+	} `json:"Dallas"`
+	Philadelphia struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Philadelphia"`
+	WashingtonDC struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"WashingtonDC"`
+	Baltimore struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Baltimore"`
+	Jacksonville struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Jacksonville"`
+	Charlotte struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Charlotte"`
+	Nashville struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Nashville"`
+	Memphis struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Memphis"`
+	SanFrancisco struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"SanFrancisco"`
+	Seattle struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Seattle"`
+	Portland struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Portland"`
+	SanDiego struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"SanDiego"`
+	Anchorage struct {
+		Calculations []Calculations `json:"data"`
+	} `json:"Anchorage"`
 }
-
-var location = ""
 
 /*
 *	The purpose of responseToString(responseStructure Response) is to take in a JSON struct response from the request
@@ -157,6 +191,7 @@ func calculate(responses []Response, numberOfPages int) Calculations {
  */
 func makeRequest(north float64, south float64, east float64, west float64, numPages int) Calculations {
 
+	time.Sleep(8 * time.Second)
 	var responses []Response
 	for pageNumber := 1; pageNumber <= numPages; pageNumber++ {
 		url := "https://www.zillow.com/search/GetSearchPageState.htm?requestID=2?"
@@ -238,6 +273,7 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 		request.Header.Set("sec-fetch-site", "same-origin")
 		request.Header.Set("sec-ch-ua-mobile", "?0")
 
+		fmt.Println(request.URL)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -263,6 +299,7 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 		}
 
 		responses = append(responses, *responseStructure)
+		responseToString(*responseStructure)
 	}
 
 	return calculate(responses, numPages)
@@ -278,27 +315,46 @@ func fetchData(w http.ResponseWriter, r *http.Request) {
 	dataStructure := &Data{}
 
 	json.Unmarshal(jsonData, &dataStructure)
+	calc := Calculations{}
 
-	if string(body) == "Boston" {
-		calc := dataStructure.Boston.Calculations[len(dataStructure.Boston.Calculations)-1]
-		toSend, _ := json.Marshal(calc)
-		w.Write(toSend)
+	switch string(body) {
+	case "Boston":
+		calc = dataStructure.Boston.Calculations[len(dataStructure.Boston.Calculations)-1]
+	case "Brooklyn":
+		calc = dataStructure.Brooklyn.Calculations[len(dataStructure.Brooklyn.Calculations)-1]
+	case "LosAngeles":
+		calc = dataStructure.LosAngeles.Calculations[len(dataStructure.LosAngeles.Calculations)-1]
+	case "Dallas":
+		calc = dataStructure.Dallas.Calculations[len(dataStructure.Dallas.Calculations)-1]
+	case "Philadelphia":
+		calc = dataStructure.Philadelphia.Calculations[len(dataStructure.Philadelphia.Calculations)-1]
+	case "WashingtonDC":
+		calc = dataStructure.WashingtonDC.Calculations[len(dataStructure.WashingtonDC.Calculations)-1]
+	case "Baltimore":
+		calc = dataStructure.Baltimore.Calculations[len(dataStructure.Baltimore.Calculations)-1]
+	case "Jacksonville":
+		calc = dataStructure.Jacksonville.Calculations[len(dataStructure.Jacksonville.Calculations)-1]
+	case "Charlotte":
+		calc = dataStructure.Charlotte.Calculations[len(dataStructure.Charlotte.Calculations)-1]
+	case "Nashville":
+		calc = dataStructure.Nashville.Calculations[len(dataStructure.Nashville.Calculations)-1]
+	case "Memphis":
+		calc = dataStructure.Memphis.Calculations[len(dataStructure.Memphis.Calculations)-1]
+	case "SanFrancisco":
+		calc = dataStructure.SanFrancisco.Calculations[len(dataStructure.SanFrancisco.Calculations)-1]
+	case "Seattle":
+		calc = dataStructure.Seattle.Calculations[len(dataStructure.Seattle.Calculations)-1]
+	case "Portland":
+		calc = dataStructure.Portland.Calculations[len(dataStructure.Portland.Calculations)-1]
+	case "SanDiego":
+		calc = dataStructure.SanDiego.Calculations[len(dataStructure.SanDiego.Calculations)-1]
+	case "Anchorage":
+		calc = dataStructure.Anchorage.Calculations[len(dataStructure.Anchorage.Calculations)-1]
+	default:
+		fmt.Println("No matches")
 	}
-	if string(body) == "Brooklyn" {
-		calc := dataStructure.Brooklyn.Calculations[len(dataStructure.Brooklyn.Calculations)-1]
-		toSend, _ := json.Marshal(calc)
-		w.Write(toSend)
-	}
-	if string(body) == "LosAngeles" {
-		calc := dataStructure.LosAngeles.Calculations[len(dataStructure.LosAngeles.Calculations)-1]
-		toSend, _ := json.Marshal(calc)
-		w.Write(toSend)
-	}
-	if string(body) == "Dallas" {
-		calc := dataStructure.Dallas.Calculations[len(dataStructure.Dallas.Calculations)-1]
-		toSend, _ := json.Marshal(calc)
-		w.Write(toSend)
-	}
+	toSend, _ := json.Marshal(calc)
+	w.Write(toSend)
 }
 
 func fill() {
@@ -306,10 +362,28 @@ func fill() {
 	jsonData, _ := ioutil.ReadAll(jsonFile)
 	dataStructure := &Data{}
 	json.Unmarshal(jsonData, &dataStructure)
+
+	/* North East */
 	dataStructure.Boston.Calculations = append(dataStructure.Boston.Calculations, makeRequest(42.414140424834216, 42.21256130186242, -70.8934730834961, -71.20177691650392, 10))
 	dataStructure.Brooklyn.Calculations = append(dataStructure.Brooklyn.Calculations, makeRequest(40.758364183254, 40.551558686334644, -73.73687118896483, -74.13855881103514, 10))
-	dataStructure.LosAngeles.Calculations = append(dataStructure.LosAngeles.Calculations, makeRequest(34.4717411923813, 33.567993762094694, -117.60835725585937, -119.21510774414062, 10))
+	dataStructure.Philadelphia.Calculations = append(dataStructure.Philadelphia.Calculations, makeRequest(40.202093630241286, 39.78440980977288, -74.81724916699217, -75.4338568330078, 10))
+	dataStructure.WashingtonDC.Calculations = append(dataStructure.WashingtonDC.Calculations, makeRequest(38.995548, 38.791645, -76.909393, -77.119759, 10))
+	dataStructure.Baltimore.Calculations = append(dataStructure.Baltimore.Calculations, makeRequest(39.396749, 39.197207, -76.529453, -76.711519, 10))
+
+	/* South */
 	dataStructure.Dallas.Calculations = append(dataStructure.Dallas.Calculations, makeRequest(33.04672230257906, 32.588541447873666, -96.3757438779297, -97.17911912207032, 10))
+	dataStructure.Jacksonville.Calculations = append(dataStructure.Jacksonville.Calculations, makeRequest(30.586232, 30.098988, -81.328404, -82.049502, 10))
+	dataStructure.Charlotte.Calculations = append(dataStructure.Charlotte.Calculations, makeRequest(35.431860761322845, 34.98640854430645, -80.42966737792969, -81.23304262207031, 10))
+	dataStructure.Nashville.Calculations = append(dataStructure.Nashville.Calculations, makeRequest(36.405496, 35.989226, -86.515588, -87.054903, 10))
+	dataStructure.Memphis.Calculations = append(dataStructure.Memphis.Calculations, makeRequest(35.264187, 34.994185, -89.637081, -90.304493, 10))
+
+	/* West Coast */
+	dataStructure.LosAngeles.Calculations = append(dataStructure.LosAngeles.Calculations, makeRequest(34.4717411923813, 33.567993762094694, -117.60835725585937, -119.21510774414062, 10))
+	dataStructure.SanFrancisco.Calculations = append(dataStructure.SanFrancisco.Calculations, makeRequest(37.842914, 37.707608, -122.32992, -122.536739, 10))
+	dataStructure.Seattle.Calculations = append(dataStructure.Seattle.Calculations, makeRequest(47.734145, 47.491912, -122.224433, -122.465159, 10))
+	dataStructure.Portland.Calculations = append(dataStructure.Portland.Calculations, makeRequest(45.714497, 45.395871, -122.471849, -122.919539, 10))
+	dataStructure.SanDiego.Calculations = append(dataStructure.SanDiego.Calculations, makeRequest(33.114249, 32.534175, -116.90816, -117.309797, 10))
+	dataStructure.Anchorage.Calculations = append(dataStructure.Anchorage.Calculations, makeRequest(61.326922, 60.733791, -148.473475, -150.420615, 10))
 
 	updated, _ := json.Marshal((dataStructure))
 	_ = ioutil.WriteFile("src/dataStorage.json", updated, 0777)
@@ -317,9 +391,9 @@ func fill() {
 }
 
 func main() {
+
 	fileServer := http.FileServer(http.Dir("src"))
 	http.Handle("/", http.StripPrefix("/", fileServer))
-
 	http.HandleFunc("/fetchData", fetchData)
 	http.HandleFunc("/hello", fetchData)
 	http.HandleFunc("/newpage", handleNewPage)

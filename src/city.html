@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <title>Tailwind Website</title>
-  <style >
+  <title>Zillow Scraper</title>
+  <style>
   </style>
 </head>
 <body class="bg-cyan-950">
@@ -17,10 +17,8 @@
         <form class="flex-auto p-6  bg-white" name="dataValues">
           <div class="flex flex-wrap">
             <h1 class="flex-auto font-medium text-2xl text-slate-900" id="Count">
-              400 Houses Anaylized
             </h1>
             <div class="w-full flex-none mt-2 order-1 text-5xl font-bold text-cyan-600" id="Title">
-              Typical House in Boston:
             </div>
           </div>
           <div class="flex items-baseline mt-4 mb-6 pb-6 border-b border-slate-200">
@@ -60,7 +58,30 @@
         </form>
       </div>
   </div>
-
+  <div class="relative">
+    <div class="flex">
+      <div class="w-1/2">
+        <div class="pie-chart"></div>
+      </div>
+      <div class="w-1/2">
+        <div class="flex flex-col">
+          <div class="legend-item">
+            <div class="legend-color bg-red-500"></div>
+            <div class="legend-label">Red</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color bg-blue-500"></div>
+            <div class="legend-label">Blue</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color bg-green-500"></div>
+            <div class="legend-label">Green</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <script src="scripts.js"></script>
 </body>
 </html>
