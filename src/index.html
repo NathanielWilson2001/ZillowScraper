@@ -8,30 +8,32 @@
 </head>
 <body>
   <div class="h-screen flex items-center justify-center bg-cyan-950">
-    <div class="relative w-7/12 bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10 mt-50">
-      <h1 class="text-3xl font-semibold">
+    <div class="relative w-auto items-center bg-white p-10 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto  sm:rounded-lg sm:px-10 mt-50">
+      <h1 class="text-3xl text-center font-semibold">
         Please Select a Location
       </h1>
       <br>
-      <form class="w-full max-w-lg" method="GET" action=""> 
-        <div class="grid grid-cols-2 gap-4">
-          <button class="bg-transparent hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white py-2 px-4 border border-cyan-500 hover:border-transparent rounded" id="Boston"  onclick="requestData('Boston')">
-            Boston
+      <form class="w-max items-center" method="GET" action=""> 
+        <div class=" flex space-x-4 w-full items-stretch">
+          <button class="bg-transparent grow px-5 hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="Boston"  onclick="requestData('NorthEast')">
+            NorthEast
           </button>
-          <button class="bg-transparent hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white py-2 px-4 border border-cyan-500 hover:border-transparent rounded" id="Brooklyn"  onclick="requestData('Brooklyn')">
+          <button class="bg-transparent grow px-5 hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="Brooklyn"  onclick="requestData('Brooklyn')">
             Brooklyn
           </button>
-          <button class="bg-transparent hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white py-2 px-4 border border-cyan-500 hover:border-transparent rounded" id="LosAngeles" onclick="requestData('LosAngeles')">
+          <button class="bg-transparent grow px-5 hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="LosAngeles" onclick="requestData('LosAngeles')">
             Los Angeles
           </button>
-          <button class="bg-transparent hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white py-2 px-4 border border-cyan-500 hover:border-transparent rounded" id="Dallas" onclick="requestData('Dallas')">
+          <button class="bg-transparent grow px-5 hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white  border border-cyan-500 hover:border-transparent rounded" id="Dallas" onclick="requestData('Dallas')">
             Dallas
+          </button>
+          <button class="bg-transparent grow px-5 hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="Dallas" onclick="requestData('Anchorage')">
+            Anchorage
           </button>
         </div>
       </form>
     </div>
   </div>
-
   <script>
    function requestData(locationName) {
       selectedLocation = "boston";

@@ -42,6 +42,15 @@ type Response struct {
 	} `json:"cat1"`
 }
 
+type SendData struct {
+	CityDataList []ListItem `json:"cityDataList"`
+}
+
+type ListItem struct {
+	Location     string       `json:"location"`
+	Calculations Calculations `json:"data"`
+}
+
 type Calculations struct {
 	RunningTotalEntries       int     `json:"runningTotalEntries"`
 	AveragePriceSum           float64 `json:"averagePriceSum"`
@@ -191,7 +200,7 @@ func calculate(responses []Response, numberOfPages int) Calculations {
  */
 func makeRequest(north float64, south float64, east float64, west float64, numPages int) Calculations {
 
-	time.Sleep(8 * time.Second)
+	time.Sleep(15 * time.Second)
 	var responses []Response
 	for pageNumber := 1; pageNumber <= numPages; pageNumber++ {
 		url := "https://www.zillow.com/search/GetSearchPageState.htm?requestID=2?"
@@ -299,7 +308,8 @@ func makeRequest(north float64, south float64, east float64, west float64, numPa
 		}
 
 		responses = append(responses, *responseStructure)
-		responseToString(*responseStructure)
+		//	Print Out Each request results in json
+		//responseToString(*responseStructure)
 	}
 
 	return calculate(responses, numPages)
@@ -315,45 +325,89 @@ func fetchData(w http.ResponseWriter, r *http.Request) {
 	dataStructure := &Data{}
 
 	json.Unmarshal(jsonData, &dataStructure)
-	calc := Calculations{}
+	responseToWeb := &SendData{}
 
+	var listItem = &ListItem{}
 	switch string(body) {
-	case "Boston":
-		calc = dataStructure.Boston.Calculations[len(dataStructure.Boston.Calculations)-1]
-	case "Brooklyn":
-		calc = dataStructure.Brooklyn.Calculations[len(dataStructure.Brooklyn.Calculations)-1]
-	case "LosAngeles":
-		calc = dataStructure.LosAngeles.Calculations[len(dataStructure.LosAngeles.Calculations)-1]
-	case "Dallas":
-		calc = dataStructure.Dallas.Calculations[len(dataStructure.Dallas.Calculations)-1]
-	case "Philadelphia":
-		calc = dataStructure.Philadelphia.Calculations[len(dataStructure.Philadelphia.Calculations)-1]
-	case "WashingtonDC":
-		calc = dataStructure.WashingtonDC.Calculations[len(dataStructure.WashingtonDC.Calculations)-1]
-	case "Baltimore":
-		calc = dataStructure.Baltimore.Calculations[len(dataStructure.Baltimore.Calculations)-1]
-	case "Jacksonville":
-		calc = dataStructure.Jacksonville.Calculations[len(dataStructure.Jacksonville.Calculations)-1]
-	case "Charlotte":
-		calc = dataStructure.Charlotte.Calculations[len(dataStructure.Charlotte.Calculations)-1]
-	case "Nashville":
-		calc = dataStructure.Nashville.Calculations[len(dataStructure.Nashville.Calculations)-1]
-	case "Memphis":
-		calc = dataStructure.Memphis.Calculations[len(dataStructure.Memphis.Calculations)-1]
-	case "SanFrancisco":
-		calc = dataStructure.SanFrancisco.Calculations[len(dataStructure.SanFrancisco.Calculations)-1]
-	case "Seattle":
-		calc = dataStructure.Seattle.Calculations[len(dataStructure.Seattle.Calculations)-1]
-	case "Portland":
-		calc = dataStructure.Portland.Calculations[len(dataStructure.Portland.Calculations)-1]
-	case "SanDiego":
-		calc = dataStructure.SanDiego.Calculations[len(dataStructure.SanDiego.Calculations)-1]
-	case "Anchorage":
-		calc = dataStructure.Anchorage.Calculations[len(dataStructure.Anchorage.Calculations)-1]
-	default:
-		fmt.Println("No matches")
+	case "NorthEast":
+		listItem.Location = "Boston"
+		listItem.Calculations = dataStructure.Boston.Calculations[len(dataStructure.Boston.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+		fmt.Println(listItem.Location)
+
+		listItem = &ListItem{}
+		listItem.Location = "Brooklyn"
+		listItem.Calculations = dataStructure.Brooklyn.Calculations[len(dataStructure.Brooklyn.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+		fmt.Println(listItem.Location)
+
+		listItem = &ListItem{}
+		listItem.Location = "Philadelphia"
+		listItem.Calculations = dataStructure.Philadelphia.Calculations[len(dataStructure.Philadelphia.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+		fmt.Println(listItem.Location)
+
+		listItem = &ListItem{}
+		listItem.Location = "WashingtonDC"
+		listItem.Calculations = dataStructure.WashingtonDC.Calculations[len(dataStructure.WashingtonDC.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+		fmt.Println(listItem.Location)
+
+		listItem = &ListItem{}
+		listItem.Location = "Baltimore"
+		listItem.Calculations = dataStructure.Baltimore.Calculations[len(dataStructure.Baltimore.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+		fmt.Println(listItem.Location)
+
+	case "South":
+
+		listItem.Location = "Dallas"
+		listItem.Calculations = dataStructure.Dallas.Calculations[len(dataStructure.Dallas.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+		listItem.Location = "Jacksonville"
+		listItem.Calculations = dataStructure.Jacksonville.Calculations[len(dataStructure.Jacksonville.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+		listItem.Location = "Charlotte"
+		listItem.Calculations = dataStructure.Charlotte.Calculations[len(dataStructure.Charlotte.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+		listItem.Location = "Nashville"
+		listItem.Calculations = dataStructure.Nashville.Calculations[len(dataStructure.Nashville.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+		listItem.Location = "Memphis"
+		listItem.Calculations = dataStructure.Memphis.Calculations[len(dataStructure.Memphis.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+	case "WestCoast":
+		listItem.Location = "Los Angeles"
+		listItem.Calculations = dataStructure.LosAngeles.Calculations[len(dataStructure.LosAngeles.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+		listItem.Location = "San Francisco"
+		listItem.Calculations = dataStructure.SanFrancisco.Calculations[len(dataStructure.SanFrancisco.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+		listItem.Location = "Seattle"
+		listItem.Calculations = dataStructure.Seattle.Calculations[len(dataStructure.Seattle.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+		listItem.Location = "Portland"
+		listItem.Calculations = dataStructure.Portland.Calculations[len(dataStructure.Portland.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+		listItem.Location = "San Diego"
+		listItem.Calculations = dataStructure.SanDiego.Calculations[len(dataStructure.SanDiego.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
+		listItem.Location = "Anchorage"
+		listItem.Calculations = dataStructure.Anchorage.Calculations[len(dataStructure.Anchorage.Calculations)-1]
+		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
+
 	}
-	toSend, _ := json.Marshal(calc)
+	toSend, _ := json.Marshal(responseToWeb)
 	w.Write(toSend)
 }
 
@@ -362,7 +416,7 @@ func fill() {
 	jsonData, _ := ioutil.ReadAll(jsonFile)
 	dataStructure := &Data{}
 	json.Unmarshal(jsonData, &dataStructure)
-
+	fmt.Println("Fill Start")
 	/* North East */
 	dataStructure.Boston.Calculations = append(dataStructure.Boston.Calculations, makeRequest(42.414140424834216, 42.21256130186242, -70.8934730834961, -71.20177691650392, 10))
 	dataStructure.Brooklyn.Calculations = append(dataStructure.Brooklyn.Calculations, makeRequest(40.758364183254, 40.551558686334644, -73.73687118896483, -74.13855881103514, 10))
@@ -378,9 +432,10 @@ func fill() {
 	dataStructure.Memphis.Calculations = append(dataStructure.Memphis.Calculations, makeRequest(35.264187, 34.994185, -89.637081, -90.304493, 10))
 
 	/* West Coast */
+
 	dataStructure.LosAngeles.Calculations = append(dataStructure.LosAngeles.Calculations, makeRequest(34.4717411923813, 33.567993762094694, -117.60835725585937, -119.21510774414062, 10))
 	dataStructure.SanFrancisco.Calculations = append(dataStructure.SanFrancisco.Calculations, makeRequest(37.842914, 37.707608, -122.32992, -122.536739, 10))
-	dataStructure.Seattle.Calculations = append(dataStructure.Seattle.Calculations, makeRequest(47.734145, 47.491912, -122.224433, -122.465159, 10))
+	dataStructure.Seattle.Calculations = append(dataStructure.Seattle.Calculations, makeRequest(47.734145, 47.491912, -122.224433, -122.465159, 5))
 	dataStructure.Portland.Calculations = append(dataStructure.Portland.Calculations, makeRequest(45.714497, 45.395871, -122.471849, -122.919539, 10))
 	dataStructure.SanDiego.Calculations = append(dataStructure.SanDiego.Calculations, makeRequest(33.114249, 32.534175, -116.90816, -117.309797, 10))
 	dataStructure.Anchorage.Calculations = append(dataStructure.Anchorage.Calculations, makeRequest(61.326922, 60.733791, -148.473475, -150.420615, 10))
