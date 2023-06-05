@@ -17,3 +17,28 @@ Current State:
   operation times as it grows. 
 - I am working on adding a pie chart to display the housing type make up of each region, and want to create a trends page for each region that displays
   charts of the current market trends for the area. But this may take some times as I need to collect more data. 
+
+Sources For Images:
+
+~ North East ~
+- Boston:        https://unsplash.com/photos/8nA_iHrxHIo - Jacob Licht
+- Brooklyn:      https://unsplash.com/photos/60qA6VQGeyA - Linmiao Xu
+- Philadelphia:  https://unsplash.com/photos/PORWKRAI55U - Dan Mall
+- Washington DC: https://unsplash.com/photos/ddnzlaU3a8k - Eric Dekker
+- Baltimore:     https://unsplash.com/photos/kcpXg-RLF8s - Colin Llyod
+
+~ South ~
+- Dallas:
+- JacksonVille: https://unsplash.com/photos/oi96dFXmi3w - Eric Dior
+- Charlotte:    https://unsplash.com/photos/aj2Os9mYgJU - Daniel Weiss
+- Nashville:    https://unsplash.com/photos/-qKP-eGqTw0 - Austin Wills
+- Memphis:      https://unsplash.com/photos/OCQGpN9odjo - Joshua J. Cotten
+
+~ West Coast ~
+- Los Angeles:   https://unsplash.com/photos/2KIDkMzmO-k - Alexis Balinoff
+- San Francisco: https://unsplash.com/photos/mDHMoOuDe34 - Fran
+- Seattle:       https://unsplash.com/photos/JEicDFy5Cd8 - Robert Ritchie
+- Portland:      https://unsplash.com/photos/Ff4BbI31Czg - Adam Blank
+- San Diego:     https://unsplash.com/photos/uxIU0kYGu-k - Lucas Davies
+- Anchorage:     https://unsplash.com/photos/ciUUM26asHI - Simon Hurry
+

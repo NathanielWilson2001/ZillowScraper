@@ -348,7 +348,7 @@ func fetchData(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(listItem.Location)
 
 		listItem = &ListItem{}
-		listItem.Location = "WashingtonDC"
+		listItem.Location = "Washington DC"
 		listItem.Calculations = dataStructure.WashingtonDC.Calculations[len(dataStructure.WashingtonDC.Calculations)-1]
 		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
 		fmt.Println(listItem.Location)
@@ -407,8 +407,10 @@ func fetchData(w http.ResponseWriter, r *http.Request) {
 		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
 
 	}
+
 	toSend, _ := json.Marshal(responseToWeb)
 	w.Write(toSend)
+	fmt.Println(w.Header())
 }
 
 func fill() {
@@ -435,7 +437,7 @@ func fill() {
 
 	dataStructure.LosAngeles.Calculations = append(dataStructure.LosAngeles.Calculations, makeRequest(34.4717411923813, 33.567993762094694, -117.60835725585937, -119.21510774414062, 10))
 	dataStructure.SanFrancisco.Calculations = append(dataStructure.SanFrancisco.Calculations, makeRequest(37.842914, 37.707608, -122.32992, -122.536739, 10))
-	dataStructure.Seattle.Calculations = append(dataStructure.Seattle.Calculations, makeRequest(47.734145, 47.491912, -122.224433, -122.465159, 5))
+	dataStructure.Seattle.Calculations = append(dataStructure.Seattle.Calculations, makeRequest(47.734145, 47.491912, -122.224433, -122.465159, 10))
 	dataStructure.Portland.Calculations = append(dataStructure.Portland.Calculations, makeRequest(45.714497, 45.395871, -122.471849, -122.919539, 10))
 	dataStructure.SanDiego.Calculations = append(dataStructure.SanDiego.Calculations, makeRequest(33.114249, 32.534175, -116.90816, -117.309797, 10))
 	dataStructure.Anchorage.Calculations = append(dataStructure.Anchorage.Calculations, makeRequest(61.326922, 60.733791, -148.473475, -150.420615, 10))
