@@ -15,7 +15,7 @@ Current State:
 
 
 
-- Currently there are only four locations, once I figure out the UI I would like to go with I will add more locations
+- Currently there are only three regions, I plan on adding more in the furture 
 - The UI is created with the use of HTML, JavaScript and Tailwind CSS for styling. 
 - The data is stored in a json file, for actual deployment the database should, and could easily be put onto a NoSQL server, as a file is not practical and can lead to long
   operation times as it grows. 
