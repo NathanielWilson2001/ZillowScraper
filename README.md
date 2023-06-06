@@ -9,7 +9,7 @@ The data is then outputed to a website houstided on localhost:5505 which can be 
 
 Current State:
 ![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/5e342492-bf6c-47f2-b749-c4447195a6f8)
-![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/737ffb53-4785-40be-9502-5a902b758cba)
+![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/7c62d49c-1592-42a4-a449-d4c2b57e9f93)
 ![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/300719e7-7a6e-4e95-89bd-517b78a83bbd)
 ![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/b371606a-b308-4399-a8a0-6f498476ed5f)
 
