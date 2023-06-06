@@ -333,31 +333,22 @@ func fetchData(w http.ResponseWriter, r *http.Request) {
 		listItem.Location = "Boston"
 		listItem.Calculations = dataStructure.Boston.Calculations[len(dataStructure.Boston.Calculations)-1]
 		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
-		fmt.Println(listItem.Location)
 
-		listItem = &ListItem{}
 		listItem.Location = "Brooklyn"
 		listItem.Calculations = dataStructure.Brooklyn.Calculations[len(dataStructure.Brooklyn.Calculations)-1]
 		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
-		fmt.Println(listItem.Location)
 
-		listItem = &ListItem{}
 		listItem.Location = "Philadelphia"
 		listItem.Calculations = dataStructure.Philadelphia.Calculations[len(dataStructure.Philadelphia.Calculations)-1]
 		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
-		fmt.Println(listItem.Location)
 
-		listItem = &ListItem{}
 		listItem.Location = "Washington DC"
 		listItem.Calculations = dataStructure.WashingtonDC.Calculations[len(dataStructure.WashingtonDC.Calculations)-1]
 		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
-		fmt.Println(listItem.Location)
 
-		listItem = &ListItem{}
 		listItem.Location = "Baltimore"
 		listItem.Calculations = dataStructure.Baltimore.Calculations[len(dataStructure.Baltimore.Calculations)-1]
 		responseToWeb.CityDataList = append(responseToWeb.CityDataList, *listItem)
-		fmt.Println(listItem.Location)
 
 	case "South":
 
@@ -410,7 +401,6 @@ func fetchData(w http.ResponseWriter, r *http.Request) {
 
 	toSend, _ := json.Marshal(responseToWeb)
 	w.Write(toSend)
-	fmt.Println(w.Header())
 }
 
 func fill() {
@@ -432,6 +422,8 @@ func fill() {
 	dataStructure.Charlotte.Calculations = append(dataStructure.Charlotte.Calculations, makeRequest(35.431860761322845, 34.98640854430645, -80.42966737792969, -81.23304262207031, 10))
 	dataStructure.Nashville.Calculations = append(dataStructure.Nashville.Calculations, makeRequest(36.405496, 35.989226, -86.515588, -87.054903, 10))
 	dataStructure.Memphis.Calculations = append(dataStructure.Memphis.Calculations, makeRequest(35.264187, 34.994185, -89.637081, -90.304493, 10))
+
+	/* MidWest */
 
 	/* West Coast */
 

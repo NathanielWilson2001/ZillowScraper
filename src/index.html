@@ -8,20 +8,20 @@
 </head>
 <body>
   <div class="h-screen flex items-center justify-center bg-cyan-950">
-    <div class="relative w-auto items-center bg-white p-10 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto  sm:rounded-lg sm:px-10 mt-50">
+    <div class="relative h-auto w-auto items-center bg-white p-10 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:rounded-lg sm:px-10 mt-50">
       <h1 class="text-3xl text-center font-semibold">
         Please Select a Location
       </h1>
       <br>
       <form class="w-max items-center" method="GET" action=""> 
-        <div class=" flex space-x-4 w-full items-stretch">
-          <button class="bg-transparent grow px-5 hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="Boston"  onclick="requestData('NorthEast')">
+        <div class="flex space-x-4 w-full h-auto items-stretch">
+          <button class="bg-transparent grow px-5 h-16 w-48 text-xl hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="NorthEast"  onclick="requestData('NorthEast')">
             North East
           </button>
-          <button class="bg-transparent grow px-5 hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="South"  onclick="requestData('South')">
+          <button class="bg-transparent grow px-5 h-16 w-48 text-xl hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="South"  onclick="requestData('South')">
             South
           </button>
-          <button class="bg-transparent grow px-5 hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="WestCoast" onclick="requestData('WestCoast')">
+          <button class="bg-transparent grow px-5 h-16 w-48 text-xl hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="WestCoast" onclick="requestData('WestCoast')">
             West Coast
           </button>
         </div>
