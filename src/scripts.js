@@ -18,14 +18,32 @@ var cityList;
 .then(data => {
   console.log(data.cityDataList[0].location)
   cityList = data.cityDataList;
-  var htmlToOutput = ""; 
+  document.getElementById("body").innerHTML += 
+  `<div class="bg-white mb-48 p-12 text-center text-neutral-700 top-0">
+  <h2 class="mb-4 text-4xl font-semibold">`+locationName+` United States</h2>
+  <h4 class="mb-6 text-xl font-semibold">Zillow Scraper</h4>
+  <button
+  type="button"
+  data-te-ripple-init
+  data-te-ripple-color="light"
+  class="rounded bg-cyan-400 text-white  px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal  shadow-[0_4px_9px_-4px_#0891b2] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:shadow-[0_4px_9px_-4px_#0891b2] dark:hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2]"  onclick="returnHome()">
+  Back to Home
+</button>
+  <button
+    type="button"
+    data-te-ripple-init
+    data-te-ripple-color="light"
+    class="rounded bg-cyan-400 text-white px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal  shadow-[0_4px_9px_-4px_#0891b2] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:shadow-[0_4px_9px_-4px_#0891b2] dark:hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2]">
+    Regional Trends
+  </button>
+</div>`;
   var count = 0;
   data.cityDataList.forEach(element => {
    console.log(element.data);
-   htmlToOutput = htmlToOutput + 
+   document.getElementById("body").innerHTML += 
    `<div class="flex justify-center items-center my-10">
-    <div class="flex font-sans shadow-2xl w-7/12 h-9/12">
-      <div class="flex-none w-96 relative" id="image"><img src="images/`+element.location+`.jpg" alt="`+element.location+`" class="absolute inset-0 w-full h-full object-cover rounded-l-lg" loading="lazy" /></div>
+    <div class="flex font-sans shadow-2xl w-7/12 h-10/12">
+      <div class="flex-none w-1/3 relative" id="image"><img src="images/`+element.location+`.jpg" alt="`+element.location+`" class="absolute inset-0 w-full h-full object-cover rounded-l-lg" loading="lazy" /></div>
           <form class="flex-auto p-6  bg-white" name="dataValues`+count+`">
             <div class="flex flex-wrap">
               <h1 class="flex-auto font-medium text-2xl text-slate-900" id="Count">`+ element.data.runningTotalEntries + ` Houses Anaylized!</h1>
@@ -60,7 +78,6 @@ var cityList;
       </div>`;
       count++; 
   });
-  document.getElementById("body").innerHTML = htmlToOutput;
 })
 .catch(function(error) {
   // Handle network error
@@ -107,6 +124,10 @@ function changeOutput(value, count){
         },
       }
     });
-
     }
 }
+
+function returnHome() {
+    // Send an HTTP GET request to the Go backend if needed
+    window.location.href = '/'
+};
