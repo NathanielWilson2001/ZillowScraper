@@ -15,13 +15,13 @@
       <br>
       <form class="w-max items-center" method="GET" action=""> 
         <div class="flex space-x-4 w-full h-auto items-stretch">
-          <button class="bg-transparent grow px-5 h-16 w-48 text-xl hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="NorthEast"  onclick="requestData('NorthEast')">
+          <button class="grow rounded bg-cyan-400 h-16 w-48 text-white px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal  shadow-[0_4px_9px_-4px_#0891b2] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:shadow-[0_4px_9px_-4px_#0891b2] dark:hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2]" id="NorthEast"  onclick="requestData('NorthEast')">
             North East
           </button>
-          <button class="bg-transparent grow px-5 h-16 w-48 text-xl hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="South"  onclick="requestData('South')">
+          <button class="grow rounded bg-cyan-400 text-white h-16 w-48 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal  shadow-[0_4px_9px_-4px_#0891b2] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:shadow-[0_4px_9px_-4px_#0891b2] dark:hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2]" id="South"  onclick="requestData('South')">
             South
           </button>
-          <button class="bg-transparent grow px-5 h-16 w-48 text-xl hover:bg-cyan-500 text-cyan-500 font-semibold hover:text-white border border-cyan-500 hover:border-transparent rounded" id="WestCoast" onclick="requestData('WestCoast')">
+          <button class="grow rounded bg-cyan-400 text-white h-16 w-48 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal  shadow-[0_4px_9px_-4px_#0891b2] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:shadow-[0_4px_9px_-4px_#0891b2] dark:hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:focus:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] dark:active:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2]" id="WestCoast" onclick="requestData('WestCoast')">
             West Coast
           </button>
         </div>
@@ -30,7 +30,6 @@
   </div>
   <script>
    function requestData(locationName) {
-      selectedLocation = "boston";
         // Send an HTTP GET request to the Go backend if needed
         fetch("/hello").then(response => {
           if (response.ok) {
