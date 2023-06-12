@@ -8,10 +8,12 @@ detail here in the future.
 The data is then outputed to a website houstided on localhost:5505 which can be accessed from the browser
 
 Current State:
-![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/5e342492-bf6c-47f2-b749-c4447195a6f8)
-![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/d13f21e9-2979-4e8c-9ef3-25449874aa49)
-![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/300719e7-7a6e-4e95-89bd-517b78a83bbd)
-![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/b371606a-b308-4399-a8a0-6f498476ed5f)
+![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/655a367c-23fe-487d-9c10-f750773e69f2)
+![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/f68f4809-b43e-4067-8a25-2d5a64aa9790)
+![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/83d5c0dc-3947-4af3-9397-1b42fa5a417b)
+![image](https://github.com/NathanielWilson2001/ZillowScraper/assets/97745329/47dd123c-98b1-4b4e-a28a-50d6e97d726c)
+
+
 
 
 
