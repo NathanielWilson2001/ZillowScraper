@@ -131,32 +131,149 @@ function stats(){
 
   document.getElementById("stats").innerHTML = `
   <h2 class="text-2xl font-bold m-6">Regional Statistics</h2>
-  <div class="container mx-auto p-4 grid grid-cols-2 gap-4">
+  <div class="container w-2/3 h-2/3 p-4 grid mx-auto grid-cols-2 gap-4">
   <div class="p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 animate__animated animate__fadeIn">
       <h3 class="text-xl font-semibold mb-2">Average Price:</h3>
-      <p class="text-xl">` + regionalAveragePrice.toFixed(2) + `</p>
-      <p class="text-sm text-gray-500 mt-5">Max Price: ` + regionalMaxPrice.toFixed(2) + `</p>
+      <p class="text-sm text-gray-500 mt-5">In USD ($)</p>
+      <canvas id="priceGraph"></canvas>
+      <p class="text-base text-gray-500 mt-10">Average Price: ` + regionalAveragePrice.toFixed(2) + `</p>
+      <p class="text-base text-gray-500">Max Price: ` + regionalMaxPrice.toFixed(2) + `</p>
     </div>
 
     <div class="p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 animate__animated animate__fadeIn">
       <h3 class="text-xl font-semibold mb-2">Average Square Foot:</h3>
-      <p class="text-xl text-gray-700">` + regionalAverageFoot.toFixed(2) + `</p>
-      <p class="text-sm text-gray-500 mt-5">Max Square Foot: ` + regionalMaxFoot.toFixed(2) + `</p>
+      <p class="text-sm text-gray-500 mt-5">In Square Foot (ft<sup>2</sup>)</p>
+      <canvas id="footGraph"></canvas>
+      <p class="text-base text-gray-500 mt-10">Average Sqaure Footage: ` + regionalAverageFoot.toFixed(2) + `</p>
+      <p class="text-base text-gray-500">Max Square Foot: ` + regionalMaxFoot.toFixed(2) + `</p>
     </div>
 
     <div class="p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 animate__animated animate__fadeIn">
       <h3 class="text-xl font-semibold mb-2">Average Zillow Price:</h3>
-      <p class="text-xl">` + regionalAverageZillowPrice.toFixed(2) + `</p>
-      <p class="text-sm text-gray-500 mt-5">Max Zillow Price: ` + regionalMaxZillowPrice.toFixed(2) + `</p>
+      <p class="text-sm text-gray-500 mt-5">In USD ($)</p>
+      <canvas id="zillowPriceGraph"></canvas>
+      <p class="text-base text-gray-500 mt-10">Average Price: ` + regionalAverageZillowPrice.toFixed(2) + `</p>
+      <p class="text-base text-gray-500">Max Zillow Price: ` + regionalMaxZillowPrice.toFixed(2) + `</p>
     </div>
 
     <div class="p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 animate__animated animate__fadeIn">
       <h3 class="text-xl font-semibold mb-2">Average Zillow Rent:</h3>
-      <p class="text-xl">` + regionalAverageZillowRent.toFixed(2) + `</p>
-      <p class="text-sm text-gray-500 mt-5">Max Zillow Rent: ` + regionalMaxZillowRent.toFixed(2) + `</p>
+      <p class="text-sm text-gray-500 mt-5">In USD ($)</p>
+      <canvas id="zillowRentGraph"></canvas>
+      <p class="text-base text-gray-500 mt-10">Average Price: ` + regionalAverageZillowRent.toFixed(2) + `</p>
+      <p class="text-base text-gray-500">Max Zillow Rent: ` + regionalMaxZillowRent.toFixed(2) + `</p>
     </div>
 </div>`;
+
+var dataPricing = {
+  labels: [],
+  datasets: [
+    {
+      label: 'Average Price',
+      data: [],
+      backgroundColor: '#083344',
+      borderColor: '#083344',
+      borderWidth: 1
+    }
+  ]
+};
+var dataFootage = {
+  labels: [],
+  datasets: [
+    {
+      label: 'Average Square Footage',
+      data: [],
+      backgroundColor: '#083344',
+      borderColor: '#083344', 
+      borderWidth: 1
+    }
+  ]
+};
+
+var dataZillowPricing = {
+  labels: [],
+  datasets: [
+    {
+      label: 'Average Zillow Price',
+      data: [],
+      backgroundColor: '#083344',
+      borderColor: '#083344', 
+      borderWidth: 1
+    }
+  ]
+};
+var dataZillowRentPricing = {
+  labels: [],
+  datasets: [
+    {
+      label: 'Average Zillow Rent Price',
+      data: [],
+      backgroundColor: '#083344',
+      borderColor: '#083344',
+      borderWidth: 1
+    }
+  ]
+};
+cityList.forEach(element => {
+
+  dataPricing.labels.push(element.location);
+  dataFootage.labels.push(element.location);
+  dataZillowPricing.labels.push(element.location);
+  dataZillowRentPricing.labels.push(element.location);
+
+  dataPricing.datasets[0].data.push(element.data.averagePriceSum);
+  dataFootage.datasets[0].data.push(element.data.averageSquareFootSum);
+  dataZillowPricing.datasets[0].data.push(element.data.averageZestimate);
+  dataZillowRentPricing.datasets[0].data.push(element.data.averageRentZestimate);
+});
+console.log(dataPricing.datasets[0])
+// Chart configuration
+var options = {
+  responsive: true,
+  scales: {
+    yAxes: [{
+      beginAtZero: true,
+      ticks: {
+        fontSize: 16
+      },
+      grid: {
+        display: false
+      }
+    }],
+    xAxes: [{
+      ticks: {
+        fontSize: 16
+      }
+    }]
+  }
+};
+
+// Create the bar graph
+var ctx = document.getElementById('priceGraph').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: dataPricing,
+  options: options
+});
+ctx = document.getElementById('footGraph').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: dataFootage,
+  options: options
+});
+ctx = document.getElementById('zillowPriceGraph').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: dataZillowPricing,
+  options: options
+});ctx = document.getElementById('zillowRentGraph').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: dataZillowRentPricing,
+  options: options
+});
 }
+
 
 function changeOutput(value, count){
     styleElement = document.getElementById("Data"+count);
