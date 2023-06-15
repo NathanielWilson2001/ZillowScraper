@@ -85,13 +85,13 @@ var cityList;
                     </label>
                     <label>
                       <input class="sr-only peer" name="size" type="radio"  onclick="changeOutput('Trends', '`+count+`')"/>
-                      <div class="w-16 h-16 rounded-full flex items-center justify-center text-cyan-400 text-xl peer-checked:text-white peer-checked:bg-cyan-400 peer-checked:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] peer-checked:outline-none peer-checked:ring-0><span class="text-lg font-bold">Type</span></div>
+                      <div class="w-16 h-16 rounded-full flex items-center justify-center text-cyan-400 text-xl peer-checked:text-white peer-checked:bg-cyan-400 peer-checked:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2] peer-checked:outline-none peer-checked:ring-0><span class="text-lg font-bold hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_#0891b2,0_4px_18px_0_#0891b2]">Type</span></div>
                     </label>
                     </div>
                   </div>
-                  <div class="w-max flex space-x-4 mb-5 text-sm font-medium h-1/2"> <div class="w-max flex-auto flex space-x-4 mr-4 mt-4">
-                  <p class="w-max text-black tracking-wide text-xl antialiased proportional-nums" id="Data`+count+`">Is worth $`+element.data.averagePriceSum.toFixed(2)+`</p>
-                </div>
+                  <div class="w-max flex space-x-4 mb-5 font-medium" id="Data`+count+`">
+                    <p class="w-max text-black tracking-wide text-xl antialiased proportional-nums">Is worth $`+element.data.averagePriceSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+`</p>
+                  </div>
               </div>
             </form>
           </div>
@@ -136,35 +136,34 @@ function stats(){
       <h3 class="text-xl font-semibold mb-2">Average Price:</h3>
       <p class="text-sm text-gray-500 mt-5">In USD ($)</p>
       <canvas id="priceGraph"></canvas>
-      <p class="text-base text-gray-500 mt-10">Average Price: ` + regionalAveragePrice.toFixed(2) + `</p>
-      <p class="text-base text-gray-500">Max Price: ` + regionalMaxPrice.toFixed(2) + `</p>
+      <p class="text-base text-gray-500 mt-10">Average Price: $` + regionalAveragePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + `</p>
+      <p class="text-base text-gray-500">Max Price: $` + regionalMaxPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + `</p>
     </div>
 
     <div class="p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 animate__animated animate__fadeIn">
       <h3 class="text-xl font-semibold mb-2">Average Square Foot:</h3>
       <p class="text-sm text-gray-500 mt-5">In Square Foot (ft<sup>2</sup>)</p>
       <canvas id="footGraph"></canvas>
-      <p class="text-base text-gray-500 mt-10">Average Sqaure Footage: ` + regionalAverageFoot.toFixed(2) + `</p>
-      <p class="text-base text-gray-500">Max Square Foot: ` + regionalMaxFoot.toFixed(2) + `</p>
+      <p class="text-base text-gray-500 mt-10">Average Sqaure Footage: ` + regionalAverageFoot.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + `</p>
+      <p class="text-base text-gray-500">Max Square Foot: ` + regionalMaxFoot.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + `</p>
     </div>
 
     <div class="p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 animate__animated animate__fadeIn">
       <h3 class="text-xl font-semibold mb-2">Average Zillow Price:</h3>
       <p class="text-sm text-gray-500 mt-5">In USD ($)</p>
       <canvas id="zillowPriceGraph"></canvas>
-      <p class="text-base text-gray-500 mt-10">Average Price: ` + regionalAverageZillowPrice.toFixed(2) + `</p>
-      <p class="text-base text-gray-500">Max Zillow Price: ` + regionalMaxZillowPrice.toFixed(2) + `</p>
+      <p class="text-base text-gray-500 mt-10">Average Price: $` + regionalAverageZillowPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + `</p>
+      <p class="text-base text-gray-500">Max Zillow Price: $` + regionalMaxZillowPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + `</p>
     </div>
 
     <div class="p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 animate__animated animate__fadeIn">
       <h3 class="text-xl font-semibold mb-2">Average Zillow Rent:</h3>
       <p class="text-sm text-gray-500 mt-5">In USD ($)</p>
       <canvas id="zillowRentGraph"></canvas>
-      <p class="text-base text-gray-500 mt-10">Average Price: ` + regionalAverageZillowRent.toFixed(2) + `</p>
-      <p class="text-base text-gray-500">Max Zillow Rent: ` + regionalMaxZillowRent.toFixed(2) + `</p>
+      <p class="text-base text-gray-500 mt-10">Average Price: $` + regionalAverageZillowRent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + `</p>
+      <p class="text-base text-gray-500">Max Zillow Rent: $` + regionalMaxZillowRent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + `</p>
     </div>
 </div>`;
-
 var dataPricing = {
   labels: [],
   datasets: [
@@ -278,13 +277,13 @@ new Chart(ctx, {
 function changeOutput(value, count){
     styleElement = document.getElementById("Data"+count);
     if(value == "averagePrice"){
-    styleElement.innerHTML = `<h4 class="text-xl">Is worth</h4> <p>$` + cityList[count].data.averagePriceSum.toFixed(2)+`</p>`;
+    styleElement.innerHTML = `<p class="w-max text-black tracking-wide text-xl antialiased proportional-nums">Is worth $` + cityList[count].data.averagePriceSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+`</p>`;
     }
     if(value == "averageSquareFootage"){
-        styleElement.textContent = "Is " + cityList[count].data.averageSquareFootSum.toFixed(2) + " square feet";
+        styleElement.innerHTML = `<p class="w-max text-black tracking-wide text-xl antialiased proportional-nums">Is `+ cityList[count].data.averageSquareFootSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ` square feet</p>`;
     }
     if(value == "Zillow"){
-        styleElement.innerHTML = "Zillow's Rent Estimate is $" + cityList[count].data.averageRentZestimate.toFixed(2) + "<br>Zillow's Price Estimage is $" + cityList[count].data.averageZestimate.toFixed(2);
+        styleElement.innerHTML = `<p class="w-max text-black tracking-wide text-xl antialiased proportional-nums">Zillow's Rent Estimate is $` + cityList[count].data.averageRentZestimate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "<br>Zillow's Price Estimage is $" + cityList[count].data.averageZestimate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+ `</p>`;
     }
     if(value == "Trends"){
       styleElement.innerHTML = `<canvas class="text-xl" id="chart`+count+`" style="max-width:600px;height:400px;font-size: x-large;"></canvas>`;
